@@ -6,12 +6,12 @@ cgi = CGI.new
 cgi.out("type" => "text/html", "charset" => "UTF-8") {
   # 情報の目印とした"goya"のデータを cgi['goya']と言う記述で取り出し、ローカル変数に代入する
   get = cgi['goya']
-  get2 = cgi['goya_quality']
+  
 
   # HTMLでレスポンスを返却する
   "<html>
     <body>
-      <h1>日別のゴーヤの総重量は下記になります</h1>
+      <h1>日別の総務のおばちゃんに譲渡したゴーヤの数は下記になります</h1>
         #{get}
     </body>
   </html>"

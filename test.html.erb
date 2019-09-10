@@ -10,13 +10,13 @@
     <% connection = PG::connect(dbname: "goya") %>
     <% connection.internal_encoding = "UTF-8" %>
 
-    <% result = connection.exec("select distinct date,sum(weight) as goya_weight from crops group by date order by date asc;") %>
+    <% result = connection.exec("select distinct date,count(give_for) as sum_obachan from crops group by date,give_for order by date asc;") %>
     <% data= [] %>
     <% data2= [] %>
 
     <% result.each do |record| %>
 
-        <%  data << "収穫日：#{record["date"]}　総重量：#{record["goya_weight"]}" %>
+        <%  data << "収穫日：#{record["date"]}　総数：#{record["sum_obachan"]}" %>
             <% end %>
       <%data.each do |dat|%>
          <%data2 << dat+"<br>"%>
@@ -25,7 +25,7 @@
 
 
     <form action="goya.cgi" method="POST">
-       一日に収穫したゴーヤの総重量を一覧にする<br><br>
+       一日に総務のおばちゃんにあげた数量を一覧にする<br><br>
        <!-- valueには、送りたいデータを代入する -->
        <!-- name="goya"を、情報の目印とする -->
       <input type="text" name="goya" value="<%= data2.join("") %>">
