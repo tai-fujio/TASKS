@@ -10,7 +10,7 @@
     <% connection = PG::connect(dbname: "goya") %>
     <% connection.internal_encoding = "UTF-8" %>
 
-    <% result = connection.exec("select distinct date,count(give_for) as sum_obachan from crops group by date,give_for order by date asc;") %>
+    <% result = connection.exec("select distinct date,count(give_for) as sum_obachan from crops where give_for='総務のおばちゃん' group by date,give_for order by date asc;") %>
     <% data= [] %>
     <% data2= [] %>
 
