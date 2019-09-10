@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <h1>月間ゴーヤ収穫量</h1>
+
+    <% require 'pg' %>
+
+    <% connection = PG::connect(dbname: "goya") %>
+    <% connection.internal_encoding = "UTF-8" %>
+
+    <% result = connection.exec("select distinct date,sum(weight) as goya_weight from crops group by date order by date asc;") %>
+    <% data= [] %>
+    <% data2= [] %>
+
+    <% result.each do |record| %>
+
+        <%  data << "収穫日：#{record["date"]}　総重量：#{record["goya_weight"]}" %>
+            <% end %>
+      <%data.each do |dat|%>
+         <%data2 << dat+"<br>"%>
+
+      <% end %>
+
+
+    <form action="goya.cgi" method="POST">
+       一日に収穫したゴーヤの総重量を一覧にする<br><br>
+       <!-- valueには、送りたいデータを代入する -->
+       <!-- name="goya"を、情報の目印とする -->
+      <input type="text" name="goya" value="<%= data2.join("") %>">
+      <input type="submit" name="送信" >
+    </form>
+
+
+    <% result_quality = connection.exec("select date,count(quality = false)
+      from crops group by date,quality order by date asc") %>
+    <% data_quality= [] %>
+    <% data2_quality= [] %>
+
+    <% result_quality.each do |record| %>
+
+        <%  data_quality << "収穫日：#{record["date"]}　不良品量：#{record["count"]}" %>
+            <% end %>
+      <%data_quality.each do |dat|%>
+         <%data2_quality << dat+"<br>"%>
+
+      <% end %>
+
+
+    <form action="goya_quality.cgi" method="POST">
+       一日に収穫したゴーヤの不良品総数を一覧にする<br><br>
+
+      <input type="text" name="goya_quality" value="<%= data2_quality.join("") %>">
+      <input type="submit" name="送信" >
+    </form>
+
+  </body>
+</html>
